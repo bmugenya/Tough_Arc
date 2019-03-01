@@ -1,4 +1,4 @@
-# [shiriki]
+# [shiriki](https://bmugenya.github.io/shiriki/)
 shiriki is an online platform that enables students to share books easily and get access to marking scheme of past papers
 
 
@@ -17,4 +17,4 @@ Method | Endpoint | Usage |
 
 ## License
 
-Shitiki is released under the [MIT License](shiriki-/LICENSE).
+Shiriki is released under the [MIT License](shiriki/LICENSE).
