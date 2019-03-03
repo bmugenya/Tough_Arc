@@ -1,0 +1,153 @@
+from flask import Flask, jsonify, make_response, request
+
+app = Flask(__name__)
+
+
+book_availabe = []
+new_users = []
+new_admin = []
+
+
+@app.route('/books', methods=['GET'])
+def books():
+    return make_response(jsonify({
+        "Title": book_availabe,
+        "status": "OK"
+
+    }), 200)
+
+
+@app.route('/book/book_id', methods=['GET'])
+def book():
+    return 'Book found'
+
+
+@app.route('/book/share', methods=['POST'])
+def share():
+    data = request.get_json()
+    book_id = data['id']
+    postedOn = data['postedOn']
+    postedBy = data['postedBy']
+    title = data['title']
+    lecture = data['lecture']
+    condition = data['condition']
+    comment = data['comment']
+
+    new_book = {
+        "id": book_id,
+        "postedOn": postedOn,
+        "postedBy": postedBy,
+        "title": title,
+        "lecture": lecture,
+        "condition": condition,
+        "comment": comment
+
+    }
+
+    book_availabe.append(new_book)
+    return make_response(jsonify({
+        "message": "Book added succedfully",
+
+    }), 201)
+
+
+@app.route('/register/user', methods=['POST'])
+def add_user():
+    data = request.get_json()
+    student_id = data['student_id']
+    firstName = data['firstName']
+    password = data['password']
+    lastName = data['lastName']
+    email = data['email']
+    username = data['username']
+    isAdmin = False
+
+    new_user = {
+        "student_id": student_id,
+        "firstName": firstName,
+        "lastName": lastName,
+        "password": password,
+        "email": email,
+        "username": username,
+        "isAdmin": isAdmin,
+    }
+
+    new_users.append(new_user)
+    return make_response(jsonify({
+        "message": "user added succedfully",
+
+    }), 201)
+
+
+@app.route('/register/admin', methods=['POST'])
+def add_admin():
+    data = request.get_json()
+    student_id = data['student_id']
+    firstName = data['firstName']
+    lastName = data['lastName']
+    password = data['password']
+    email = data['email']
+    username = data['username']
+    isAdmin = True
+
+    new_user = {
+        "student_id": student_id,
+        "firstName": firstName,
+        "lastName": lastName,
+        "password": password,
+        "email": email,
+        "username": username,
+        "isAdmin": isAdmin,
+    }
+
+    new_admin.append(new_user)
+    return make_response(jsonify({
+        "message": "admin added succedfully",
+
+    }), 201)
+
+
+@app.route('/login/admin', methods=['POST'])
+def login_admin():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+
+    user = {
+        "username": username,
+        "password": password
+
+    }
+
+    if user in new_admin:
+        return make_response(jsonify({
+            "message": "admin added succedfully",
+
+        }), 201)
+    else:
+        return "user not available"
+
+
+@app.route('/login/user', methods=['POST'])
+def login_user():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+
+    user = {
+        "username": username,
+        "password": password
+
+    }
+
+    if user in new_users:
+        return make_response(jsonify({
+            "message": "admin added succedfully",
+
+        }), 201)
+    else:
+        return "user not available"
+
+
+if __name__ == '__main__':
+    app.run()
