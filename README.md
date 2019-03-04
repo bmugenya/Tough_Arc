@@ -13,7 +13,7 @@ Method | Endpoint | Usage |
 |POST| `/api/v1/share-book` |  share a book. |
 |GET| `/api/v1/get-books` | Get all books.|
 |GET| `/api/v1/get-book/<book_id>` | Get one book. |
-|DELETE| `/api/v1/book/<flag_id>` | remove a book. |
+|DELETE| `/api/v1/book/<book_id>` | remove a book. |
 
 ## License
 
