@@ -1,121 +1,170 @@
-
-
-new_users = []
-new_admin = []
-book_availabe = []
+from ...db_con import database_setup
 
 
 class Books():
 
     def __init__(self):
-        self.books = book_availabe
+        self.database = database_setup()
+        self.cursor = self.database.cursor
 
-    def share(self, book_id, postedOn, postedBy, title, lecture, condition, comment):
+    def share(self, book_id, postedBy, title, lecture, condition, comment):
 
-        data = {
-            "id": book_id,
-            "postedOn": postedOn,
-            "postedBy": postedBy,
-            "title": title,
-            "lecture": lecture,
-            "condition": condition,
-            "comment": comment
+        book = {
+            "book_id": book_id,
+            "postedBy": self.postedBy,
+            "title": self.title,
+            "lecture": self.lecture,
+            "condition": self.condition,
+            "comment": self.comment
 
         }
 
-        self.books.append(data)
-        return self.books
+        query = """INSERT INTO Share  (book_id,postedBy, title,lecture,condition,comment)
+            VALUES(%(postedBy)s, %(title)s, %(lecture)s,
+                              %(condition)s, %(comment)s)"""
+
+        self.cursor.execute(query, book)
+        self.database.conn.commit()
+
+        return book
 
 
 class BuyBook():
 
     def __init__(self):
-        self.books = book_availabe
+        self.database = database_setup()
+        self.cursor = self.database.cursor
 
     def buy(self, book_id, title, lecture, condition):
 
-        data = {
-            "id": book_id,
-            "title": title,
-            "lecture": lecture,
-            "condition": condition
+        book = {
+            "id": self.book_id,
+            "title": self.title,
+            "lecture": self.lecture,
+            "condition": self.condition
 
         }
 
-        self.books.append(data)
-        return self.books
+        query = """INSERT INTO Order  (postedBy, title,lecture,condition,comment)
+            VALUES(%(postedBy)s, %(title)s, %(lecture)s,
+                              %(condition)s, %(comment)s)"""
+
+        self.cursor.execute(query, book)
+        self.database.conn.commit()
+
+        return book
+
+
+class ViewBooks():
+    def __init__(self):
+        self.database = database_setup()
+        self.cursor = self.database.corsor
+
+    def get_books(self):
+        self.cursor.execute("SELECT * FROM Share")
+        books = self.cursor.fetchall()
+        return books
 
 
 class ViewBook():
     def __init__(self):
-        self.books = book_availabe
+        self.database = database_setup()
+        self.cursor = self.database.corsor
 
-    def get_books(self):
-        return self.books
+    def get_book(self, book_id):
+        self.cursor.execute("SELECT * FROM Share WHERE book_id = (%s);" % (book_id))
+        book = self.cursor.fetchall
+        return book
 
 
 class AdminRegistration():
     def __init__(self):
-        self.user = new_admin
+        self.database = database_setup()
+        self.cursor = self.database.corsor
 
-    def save_admin(self, student_id, firstName, password, lastName, email, username):
+    def save_admin(self, student_id, firstName, lastName, userName, password, email, phoneNumber):
 
-        new_user = {
+        admin = {
             "student_id": student_id,
             "firstName": firstName,
             "lastName": lastName,
+            "username": userName,
             "password": password,
             "email": email,
-            "username": username,
+            "phoneNumber": phoneNumber,
             "isAdmin": True,
         }
-        self.user.append(new_user)
-        return self.user
+
+        query = """INSERT INTO Users (student_id,firstName, lastName,userName,password,email,phoneNumber,isAdmin)
+            VALUES(%(student_id)s, %(firstName)s, %(lastName)s,
+                              %(userName)s, %(password)s, %(email)s,%(phoneNumber)s,%(isAdmin)s)"""
+
+        self.cursor.execute(query, admin)
+        self.database.conn.commit()
+
+        return admin
 
 
 class UserRegistration():
     def __init__(self):
-        self.user = new_users
+        self.database = database_setup()
+        self.cursor = self.database.corsor
 
-    def save_users(self, student_id, firstName, password, lastName, email, username):
+    def save_users(self, student_id, firstName, lastName, userName, password, email, phoneNumber):
 
-        new_user = {
+        user = {
             "student_id": student_id,
             "firstName": firstName,
             "lastName": lastName,
-            "password": password,
+            "username": userName,
             "email": email,
-            "username": username,
+            "password": password,
             "isAdmin": False,
         }
 
-        self.user.append(new_user)
-        return self.user
+        query = """INSERT INTO Users (student_id,firstName, lastName,userName,password,email,phoneNumber,isAdmin)
+            VALUES(%(student_id)s, %s(firstName)s, %(lastName)s,
+                              %(userName)s, %(password)s, %(email)s,%(phoneNumber)s,%(isAdmin)s)"""
+
+        self.cursor.execute(query, user)
+        self.database.conn.commit()
+
+        return user
 
 
 class AdminLogin():
 
     def __init__(self):
-        self.user = new_admin
+        self.database = database_setup()
+        self.cursor = self.database.corsor
 
     def login(self, email, password):
 
-        users = {
+        admin = {
             "email": email,
             "password": password
         }
-        return users
+
+        query = "SELECT * FROM Users WHERE email = '%s' AND password = '%s';" % (email, password)
+        self.cursor.execute(query, admin)
+        admins = self.cursor.fetchall()
+        return admins
 
 
 class UserLogin():
 
     def __init__(self):
-        self.user = new_users
+        self.database = database_setup()
+        self.cursor = self.database.corsor
 
     def login(self, email, password):
 
-        users = {
+        user = {
             "email": email,
             "password": password
         }
+
+        query = "SELECT * FROM Users WHERE email = '%s' AND password = '%s';" % (email, password)
+        self.cursor.execute(query, user)
+        users = self.cursor.fetchall()
         return users
