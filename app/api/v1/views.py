@@ -11,15 +11,14 @@ class Share(Resource, Books):
 
     def post(self):
         data = request.get_json()
-        book_id = data['id']
-        postedOn = data['postedOn']
-        postedBy = data['postedBy']
-        title = data['title']
-        lecture = data['lecture']
-        condition = data['condition']
-        comment = data['comment']
+        self.book_id = data['book_id']
+        self.postedBy = data['postedBy']
+        self.title = data['title']
+        self.lecture = data['lecture']
+        self.condition = data['condition']
+        self.comment = data['comment']
 
-        newBook = self.book.share(book_id, postedOn, postedBy, title, lecture, condition, comment)
+        newBook = self.book.share(book_id, title, lecture, condition, comment)
 
         return make_response(jsonify({
             "message": "Book added succedfully",
@@ -34,7 +33,7 @@ class Buy(Resource, BuyBook):
 
     def post(self):
         data = request.get_json()
-        book_id = data['id']
+        book_id = data['book_id']
         title = data['title']
         lecture = data['lecture']
         condition = data['condition']
@@ -48,12 +47,26 @@ class Buy(Resource, BuyBook):
         }), 201)
 
 
+class Available(Resource, ViewBooks):
+    def __init__(self):
+        self.book = ViewBooks()
+
+    def get(self):
+        book = self.book.get_books()
+
+        return make_response(jsonify({
+            "message": "Book added succedfully",
+            "data": book
+
+        }), 200)
+
+
 class View(Resource, ViewBook):
     def __init__(self):
         self.book = ViewBook()
 
     def get(self):
-        book = self.book.get_books()
+        book = self.book.get_book()
 
         return make_response(jsonify({
             "message": "Book added succedfully",
