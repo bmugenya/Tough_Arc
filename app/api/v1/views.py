@@ -11,14 +11,12 @@ class Share(Resource, Books):
 
     def post(self):
         data = request.get_json()
-        self.book_id = data['book_id']
-        self.postedBy = data['postedBy']
-        self.title = data['title']
-        self.lecture = data['lecture']
-        self.condition = data['condition']
-        self.comment = data['comment']
+        title = data['title']
+        lecture = data['lecture']
+        condition = data['condition']
+        comment = data['comment']
 
-        newBook = self.book.share(book_id, title, lecture, condition, comment)
+        newBook = self.book.share(title, lecture, condition, comment)
 
         return make_response(jsonify({
             "message": "Book added succedfully",
@@ -33,12 +31,11 @@ class Buy(Resource, BuyBook):
 
     def post(self):
         data = request.get_json()
-        book_id = data['book_id']
         title = data['title']
         lecture = data['lecture']
         condition = data['condition']
 
-        book = self.book.buy(book_id, title, lecture, condition)
+        book = self.book.buy(title, lecture, condition)
 
         return make_response(jsonify({
             "message": "Book added succedfully",
@@ -82,13 +79,13 @@ class AdminReg(Resource, AdminRegistration):
     def post(self):
         data = request.get_json()
         student_id = data['student_id']
-        firstName = data['firstName']
-        password = data['password']
-        lastName = data['lastName']
+        firstname = data['firstname']
+        lastname = data['lastname']
         email = data['email']
-        username = data['username']
+        phonenumber = data['phonenumber']
+        password = data['password']
 
-        admin = self.user.save_admin(student_id, firstName, password, lastName, email, username)
+        admin = self.user.save_admin(student_id, firstname, lastname, email, phonenumber, password)
 
         return make_response(jsonify({
             "message": "user added succedfully",
@@ -104,13 +101,13 @@ class UserReg(Resource, UserRegistration):
     def post(self):
         data = request.get_json()
         student_id = data['student_id']
-        firstName = data['firstName']
-        password = data['password']
-        lastName = data['lastName']
+        firstname = data['firstname']
+        lastname = data['lastname']
+        phonenumber = data['phonenumber']
         email = data['email']
-        username = data['username']
+        password = data['password']
 
-        user = self.user.save_users(student_id, firstName, password, lastName, email, username)
+        user = self.user.save_users(student_id, firstname, lastname, email, phonenumber, password)
 
         return make_response(jsonify({
             "message": "user added succedfully",
