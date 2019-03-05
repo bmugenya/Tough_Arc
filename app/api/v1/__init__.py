@@ -1,7 +1,7 @@
-from views import *
-
 from flask_restful import Api, Resource
 from flask import Blueprint
+from userViews import *
+from bookViews import *
 
 
 version_one = Blueprint('api_v1', __name__, url_prefix='/api/v1')
