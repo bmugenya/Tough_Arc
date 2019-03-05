@@ -7,21 +7,18 @@ class Books():
         self.database = database_setup()
         self.cursor = self.database.cursor
 
-    def share(self, book_id, postedBy, title, lecture, condition, comment):
+    def share(self, title, lecture, condition, comment):
 
         book = {
-            "book_id": book_id,
-            "postedBy": self.postedBy,
-            "title": self.title,
-            "lecture": self.lecture,
-            "condition": self.condition,
-            "comment": self.comment
+            "title": title,
+            "lecture": lecture,
+            "condition": condition,
+            "comment": comment
 
         }
 
-        query = """INSERT INTO Share  (book_id,postedBy, title,lecture,condition,comment)
-            VALUES(%(postedBy)s, %(title)s, %(lecture)s,
-                              %(condition)s, %(comment)s)"""
+        query = """INSERT INTO Share(title, lecture, condition, comment)
+        VALUES(%(title)s, %(lecture)s, %(condition)s,%(comment)s)"""
 
         self.cursor.execute(query, book)
         self.database.conn.commit()
@@ -35,19 +32,19 @@ class BuyBook():
         self.database = database_setup()
         self.cursor = self.database.cursor
 
-    def buy(self, book_id, title, lecture, condition):
+    def buy(self, title, lecture, condition):
 
         book = {
-            "id": self.book_id,
-            "title": self.title,
-            "lecture": self.lecture,
-            "condition": self.condition
+
+
+            "title": title,
+            "lecture": lecture,
+            "condition": condition
 
         }
 
-        query = """INSERT INTO Order  (postedBy, title,lecture,condition,comment)
-            VALUES(%(postedBy)s, %(title)s, %(lecture)s,
-                              %(condition)s, %(comment)s)"""
+        query = """INSERT INTO Orders (title,lecture,condition)
+        VALUES(%(title)s, %(lecture)s,%(condition)s)"""
 
         self.cursor.execute(query, book)
         self.database.conn.commit()
@@ -58,7 +55,7 @@ class BuyBook():
 class ViewBooks():
     def __init__(self):
         self.database = database_setup()
-        self.cursor = self.database.corsor
+        self.cursor = self.database.cursor
 
     def get_books(self):
         self.cursor.execute("SELECT * FROM Share")
@@ -69,7 +66,7 @@ class ViewBooks():
 class ViewBook():
     def __init__(self):
         self.database = database_setup()
-        self.cursor = self.database.corsor
+        self.cursor = self.database.cursor
 
     def get_book(self, book_id):
         self.cursor.execute("SELECT * FROM Share WHERE book_id = (%s);" % (book_id))
@@ -80,24 +77,23 @@ class ViewBook():
 class AdminRegistration():
     def __init__(self):
         self.database = database_setup()
-        self.cursor = self.database.corsor
+        self.cursor = self.database.cursor
 
-    def save_admin(self, student_id, firstName, lastName, userName, password, email, phoneNumber):
+    def save_admin(self, student_id, firstname, lastname, email, phonenumber, password):
 
         admin = {
             "student_id": student_id,
-            "firstName": firstName,
-            "lastName": lastName,
-            "username": userName,
-            "password": password,
+            "firstname": firstname,
+            "lastname": lastname,
             "email": email,
-            "phoneNumber": phoneNumber,
-            "isAdmin": True,
+            "phonenumber": phonenumber,
+            "password": password,
+            "isAdmin": True
         }
 
-        query = """INSERT INTO Users (student_id,firstName, lastName,userName,password,email,phoneNumber,isAdmin)
-            VALUES(%(student_id)s, %(firstName)s, %(lastName)s,
-                              %(userName)s, %(password)s, %(email)s,%(phoneNumber)s,%(isAdmin)s)"""
+        query = """INSERT INTO Users (student_id,firstname, lastname,email,phonenumber,password,isAdmin)
+            VALUES(%(student_id)s, %(firstname)s, %(lastname)s,
+                              %(email)s, %(phonenumber)s, %(password)s,%(isAdmin)s)"""
 
         self.cursor.execute(query, admin)
         self.database.conn.commit()
@@ -108,23 +104,23 @@ class AdminRegistration():
 class UserRegistration():
     def __init__(self):
         self.database = database_setup()
-        self.cursor = self.database.corsor
+        self.cursor = self.database.cursor
 
-    def save_users(self, student_id, firstName, lastName, userName, password, email, phoneNumber):
+    def save_users(self, student_id, firstname, lastname, email, phonenumber, password):
 
         user = {
             "student_id": student_id,
-            "firstName": firstName,
-            "lastName": lastName,
-            "username": userName,
+            "firstname": firstname,
+            "lastname": lastname,
             "email": email,
+            "phonenumber": phonenumber,
             "password": password,
-            "isAdmin": False,
+            "isAdmin": False
         }
 
-        query = """INSERT INTO Users (student_id,firstName, lastName,userName,password,email,phoneNumber,isAdmin)
-            VALUES(%(student_id)s, %s(firstName)s, %(lastName)s,
-                              %(userName)s, %(password)s, %(email)s,%(phoneNumber)s,%(isAdmin)s)"""
+        query = """INSERT INTO Users (student_id,firstname, lastname,email,phonenumber,password,isAdmin)
+            VALUES(%(student_id)s, %(firstname)s, %(lastname)s,
+                              %(email)s, %(phonenumber)s, %(password)s,%(isAdmin)s)"""
 
         self.cursor.execute(query, user)
         self.database.conn.commit()
@@ -136,7 +132,7 @@ class AdminLogin():
 
     def __init__(self):
         self.database = database_setup()
-        self.cursor = self.database.corsor
+        self.cursor = self.database.cursor
 
     def login(self, email, password):
 
@@ -155,7 +151,7 @@ class UserLogin():
 
     def __init__(self):
         self.database = database_setup()
-        self.cursor = self.database.corsor
+        self.cursor = self.database.cursor
 
     def login(self, email, password):
 
