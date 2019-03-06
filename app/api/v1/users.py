@@ -1,4 +1,7 @@
 from ...db_con import database_setup
+from datetime import datetime, timedelta
+import jwt
+import os
 
 
 class AdminRegistration():
@@ -6,10 +9,10 @@ class AdminRegistration():
         self.database = database_setup()
         self.cursor = self.database.cursor
 
-    def save_admin(self, student_id, firstname, lastname, email, phonenumber, password):
+    def save_admin(self, firstname, lastname, email, phonenumber, password):
 
         admin = {
-            "student_id": student_id,
+
             "firstname": firstname,
             "lastname": lastname,
             "email": email,
@@ -18,8 +21,8 @@ class AdminRegistration():
             "isAdmin": True
         }
 
-        query = """INSERT INTO Users (student_id,firstname, lastname,email,phonenumber,password,isAdmin)
-            VALUES(%(student_id)s, %(firstname)s, %(lastname)s,
+        query = """INSERT INTO Users (firstname, lastname,email,phonenumber,password,isAdmin)
+            VALUES( %(firstname)s, %(lastname)s,
                               %(email)s, %(phonenumber)s, %(password)s,%(isAdmin)s)"""
 
         self.cursor.execute(query, admin)
@@ -33,10 +36,10 @@ class UserRegistration():
         self.database = database_setup()
         self.cursor = self.database.cursor
 
-    def save_users(self, student_id, firstname, lastname, email, phonenumber, password):
+    def save_users(self, firstname, lastname, email, phonenumber, password):
 
         user = {
-            "student_id": student_id,
+
             "firstname": firstname,
             "lastname": lastname,
             "email": email,
@@ -45,8 +48,8 @@ class UserRegistration():
             "isAdmin": False
         }
 
-        query = """INSERT INTO Users (student_id,firstname, lastname,email,phonenumber,password,isAdmin)
-            VALUES(%(student_id)s, %(firstname)s, %(lastname)s,
+        query = """INSERT INTO Users (firstname, lastname,email,phonenumber,password,isAdmin)
+            VALUES( %(firstname)s, %(lastname)s,
                               %(email)s, %(phonenumber)s, %(password)s,%(isAdmin)s)"""
 
         self.cursor.execute(query, user)
@@ -70,7 +73,8 @@ class AdminLogin():
 
         query = "SELECT * FROM Users WHERE email = '%s' AND password = '%s';" % (email, password)
         self.cursor.execute(query, admin)
-        admins = self.cursor.fetchall()
+        admins = self.cursor.fetchone()
+
         return admins
 
 
@@ -80,14 +84,26 @@ class UserLogin():
         self.database = database_setup()
         self.cursor = self.database.cursor
 
-    def login(self, email, password):
+    def encode_token(self, user_id):
 
-        user = {
-            "email": email,
-            "password": password
-        }
+        try:
+            payload = {
+                "exp": datetime.utcnow() + timedelta(days=1),
+                "iat": datetime.utcnow(),
+                "user": user_id
+            }
+            return jwt.encode(
+                payload,
+                os.getenv('SECRET_KEY'),
+                algorithm='HS256'
+            )
 
-        query = "SELECT * FROM Users WHERE email = '%s' AND password = '%s';" % (email, password)
-        self.cursor.execute(query, user)
-        users = self.cursor.fetchall()
+        except Exception as e:
+            return e
+
+    def login(self, email):
+        query = "SELECT student_id,password FROM Users WHERE email = '%s';" % (email)
+        self.cursor.execute(query)
+
+        users = self.cursor.fetchone()
         return users

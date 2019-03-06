@@ -11,14 +11,13 @@ class AdminReg(Resource, AdminRegistration):
 
     def post(self):
         data = request.get_json()
-        student_id = data['student_id']
         firstname = data['firstname']
         lastname = data['lastname']
         email = data['email']
         phonenumber = data['phonenumber']
         password = data['password']
 
-        admin = self.user.save_admin(student_id, firstname, lastname, email, phonenumber, password)
+        admin = self.user.save_admin(firstname, lastname, email, phonenumber, password)
 
         return make_response(jsonify({
             "message": "user added succedfully",
@@ -33,14 +32,14 @@ class UserReg(Resource, UserRegistration):
 
     def post(self):
         data = request.get_json()
-        student_id = data['student_id']
+
         firstname = data['firstname']
         lastname = data['lastname']
         phonenumber = data['phonenumber']
         email = data['email']
         password = data['password']
 
-        user = self.user.save_users(student_id, firstname, lastname, email, phonenumber, password)
+        user = self.user.save_users(firstname, lastname, email, phonenumber, password)
 
         return make_response(jsonify({
             "message": "user added succedfully",
@@ -72,13 +71,33 @@ class UserAccess(Resource, UserLogin):
 
     def post(self):
         data = request.get_json()
-        username = data['username']
-        password = data['password']
 
-        user = self.user.login(username, password)
+        new = {
+            "email": data['email'],
+            "password": data['password']
+        }
 
-        return make_response(jsonify({
-            "message": "user added succedfully",
-            "admin": user
+        req = self.user.login(new['email'])
 
-        }), 200)
+        if req:
+
+            user_id, password = req
+
+            if password != new['password']:
+                return make_response(jsonify({
+                    "message": "Invalid password",
+
+                }), 201)
+
+           # token = self.user.encode_token(user_id)
+            return make_response(jsonify({
+                "message": "welcome %s" % new['email'],
+               # "acces-token": token
+
+            }), 201)
+
+        else:
+            return make_response(jsonify({
+                "message": "user does not exit",
+
+            }), 201)
