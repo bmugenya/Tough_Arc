@@ -4,15 +4,48 @@ import jwt
 import os
 
 
-class AdminRegistration():
+class User():
+
     def __init__(self):
         self.database = database_setup()
         self.cursor = self.database.cursor
 
+    def validator(self, email):
+
+        self.cursor.execute("SELECT * FROM Users WHERE email = '%s';" % (email))
+        result = self.cursor.fetchone()
+
+        if result:
+            return True
+
+        return False
+
+    def encode_token(self, user_id):
+
+        try:
+            payload = {
+                "exp": datetime.utcnow() + timedelta(days=1),
+                "iat": datetime.utcnow(),
+                "user": user_id
+            }
+            return jwt.encode(
+                payload,
+                os.getenv('SECRET_KEY'),
+                algorithm='HS256'
+            )
+
+        except Exception as e:
+            return e
+
     def save_admin(self, firstname, lastname, email, phonenumber, password):
 
-        admin = {
+        self.cursor.execute("SELECT * FROM Users WHERE email = '%s';" % (email))
+        result = self.cursor.fetchone()
 
+        if result:
+            return False
+
+        admin = {
             "firstname": firstname,
             "lastname": lastname,
             "email": email,
@@ -29,12 +62,6 @@ class AdminRegistration():
         self.database.conn.commit()
 
         return admin
-
-
-class UserRegistration():
-    def __init__(self):
-        self.database = database_setup()
-        self.cursor = self.database.cursor
 
     def save_users(self, firstname, lastname, email, phonenumber, password):
 
@@ -57,53 +84,9 @@ class UserRegistration():
 
         return user
 
-
-class AdminLogin():
-
-    def __init__(self):
-        self.database = database_setup()
-        self.cursor = self.database.cursor
-
-    def login(self, email, password):
-
-        admin = {
-            "email": email,
-            "password": password
-        }
-
-        query = "SELECT * FROM Users WHERE email = '%s' AND password = '%s';" % (email, password)
-        self.cursor.execute(query, admin)
-        admins = self.cursor.fetchone()
-
-        return admins
-
-
-class UserLogin():
-
-    def __init__(self):
-        self.database = database_setup()
-        self.cursor = self.database.cursor
-
-    def encode_token(self, user_id):
-
-        try:
-            payload = {
-                "exp": datetime.utcnow() + timedelta(days=1),
-                "iat": datetime.utcnow(),
-                "user": user_id
-            }
-            return jwt.encode(
-                payload,
-                os.getenv('SECRET_KEY'),
-                algorithm='HS256'
-            )
-
-        except Exception as e:
-            return e
-
     def login(self, email):
         query = "SELECT student_id,password FROM Users WHERE email = '%s';" % (email)
         self.cursor.execute(query)
-
         users = self.cursor.fetchone()
+
         return users
