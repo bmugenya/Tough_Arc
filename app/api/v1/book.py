@@ -70,5 +70,5 @@ class ViewBook():
 
     def get_book(self, book_id):
         self.cursor.execute("SELECT * FROM Share WHERE book_id = (%s);" % (book_id))
-        book = self.cursor.fetchall
+        book = self.cursor.fetchall()
         return book
