@@ -21,21 +21,24 @@ class User():
         return False
 
     def encode_token(self, user_id):
-
         try:
             payload = {
                 "exp": datetime.utcnow() + timedelta(days=1),
                 "iat": datetime.utcnow(),
                 "user": user_id
             }
-            return jwt.encode(
+            token = jwt.encode(
                 payload,
                 os.getenv('SECRET_KEY'),
                 algorithm='HS256'
             )
 
+            resp = token
+
         except Exception as e:
-            return e
+            resp = e
+
+        return resp
 
     def save_admin(self, firstname, lastname, email, phonenumber, password):
 
@@ -85,7 +88,7 @@ class User():
         return user
 
     def login(self, email):
-        query = "SELECT student_id,password FROM Users WHERE email = '%s';" % (email)
+        query = "SELECT student_id,password,firstname FROM Users WHERE email = '%s';" % (email)
         self.cursor.execute(query)
         users = self.cursor.fetchone()
 
