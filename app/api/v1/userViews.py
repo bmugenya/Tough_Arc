@@ -29,7 +29,7 @@ class AdminReg(Resource, User):
         return make_response(jsonify({
             "message": "user exits",
 
-        }), 201)
+        }), 401)
 
 
 class UserReg(Resource, User):
@@ -47,38 +47,22 @@ class UserReg(Resource, User):
 
         if self.user.validator(email) is False:
             user = self.user.save_users(firstname, lastname, email, phonenumber, password)
+            token = self.user.encode_token(user)
 
             return make_response(jsonify({
                 "message": "user added succedfully",
-                "admin": user
+                "admin": user,
+                "token": token
 
             }), 201)
 
         return make_response(jsonify({
             "message": "user exits",
 
-        }), 201)
+        }), 401)
 
 
-class AdminAccess(Resource, User):
-    def __init__(self):
-        self.user = User()
-
-    def post(self):
-        data = request.get_json()
-        username = data['username']
-        password = data['password']
-
-        admin = self.user.login(username, password)
-
-        return make_response(jsonify({
-            "message": "user added succedfully",
-            "admin": admin
-
-        }), 200)
-
-
-class UserAccess(Resource, User):
+class Auth(Resource, User):
     def __init__(self):
         self.user = User()
 
@@ -93,24 +77,23 @@ class UserAccess(Resource, User):
         req = self.user.login(new['email'])
 
         if req:
-
-            user_id, password = req
+            user_id, password, firstname = req
 
             if password != new['password']:
                 return make_response(jsonify({
                     "message": "Invalid password",
 
-                }), 201)
+                }), 401)
 
-            #token = self.user.encode_token(user_id)
+            token = self.user.encode_token(user_id)
             return make_response(jsonify({
-                "message": "welcome %s" % new['email'],
-                # "acces-token": token
+                "message": "welcome %s" % firstname,
+                "acces-token": token
 
-            }), 201)
+            }), 200)
 
         else:
             return make_response(jsonify({
                 "message": "user does not exit",
 
-            }), 201)
+            }), 401)
