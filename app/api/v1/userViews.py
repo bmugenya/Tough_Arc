@@ -2,12 +2,12 @@ from flask import jsonify, make_response, request
 from flask_restful import Resource
 
 
-from users import *
+from users import User
 
 
-class AdminReg(Resource, AdminRegistration):
+class AdminReg(Resource, User):
     def __init__(self):
-        self.user = AdminRegistration()
+        self.user = User()
 
     def post(self):
         data = request.get_json()
@@ -17,18 +17,24 @@ class AdminReg(Resource, AdminRegistration):
         phonenumber = data['phonenumber']
         password = data['password']
 
-        admin = self.user.save_admin(firstname, lastname, email, phonenumber, password)
+        if self.user.validator(email) is False:
+            admin = self.user.save_admin(firstname, lastname, email, phonenumber, password)
+
+            return make_response(jsonify({
+                "message": "user added succedfully",
+                "admin": admin
+
+            }), 201)
 
         return make_response(jsonify({
-            "message": "user added succedfully",
-            "admin": admin
+            "message": "user exits",
 
         }), 201)
 
 
-class UserReg(Resource, UserRegistration):
+class UserReg(Resource, User):
     def __init__(self):
-        self.user = UserRegistration()
+        self.user = User()
 
     def post(self):
         data = request.get_json()
@@ -39,17 +45,24 @@ class UserReg(Resource, UserRegistration):
         email = data['email']
         password = data['password']
 
-        user = self.user.save_users(firstname, lastname, email, phonenumber, password)
+        if self.user.validator(email) is False:
+            user = self.user.save_users(firstname, lastname, email, phonenumber, password)
+
+            return make_response(jsonify({
+                "message": "user added succedfully",
+                "admin": user
+
+            }), 201)
 
         return make_response(jsonify({
-            "message": "user added succedfully",
-            "admin": user
+            "message": "user exits",
+
         }), 201)
 
 
-class AdminAccess(Resource, AdminLogin):
+class AdminAccess(Resource, User):
     def __init__(self):
-        self.user = AdminLogin()
+        self.user = User()
 
     def post(self):
         data = request.get_json()
@@ -65,9 +78,9 @@ class AdminAccess(Resource, AdminLogin):
         }), 200)
 
 
-class UserAccess(Resource, UserLogin):
+class UserAccess(Resource, User):
     def __init__(self):
-        self.user = UserLogin()
+        self.user = User()
 
     def post(self):
         data = request.get_json()
@@ -89,10 +102,10 @@ class UserAccess(Resource, UserLogin):
 
                 }), 201)
 
-           # token = self.user.encode_token(user_id)
+            #token = self.user.encode_token(user_id)
             return make_response(jsonify({
                 "message": "welcome %s" % new['email'],
-               # "acces-token": token
+                # "acces-token": token
 
             }), 201)
 
