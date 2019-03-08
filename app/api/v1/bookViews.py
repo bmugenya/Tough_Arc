@@ -38,7 +38,7 @@ class Buy(Resource, BuyBook):
         book = self.book.buy(title, lecture, condition)
 
         return make_response(jsonify({
-            "message": "Book added succedfully",
+            "message": "Book requested succesfully",
             "data": book
 
         }), 201)
@@ -52,7 +52,7 @@ class Available(Resource, ViewBooks):
         book = self.book.get_books()
 
         return make_response(jsonify({
-            "message": "Book added succedfully",
+            "message": "Books Available",
             "data": book
 
         }), 200)
@@ -62,8 +62,8 @@ class View(Resource, ViewBook):
     def __init__(self):
         self.book = ViewBook()
 
-    def get(self):
-        book = self.book.get_book()
+    def get(self, book_id):
+        book = self.book.get_book(book_id)
 
         return make_response(jsonify({
             "message": "Book added succedfully",
