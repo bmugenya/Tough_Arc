@@ -1,0 +1,18 @@
+from flask import jsonify, make_response, request
+from flask_restful import Resource
+
+
+from .model import *
+
+class Chapters(Resource, Manga):
+    def __init__(self):
+        self.manga = Manga()
+
+    def get(self):
+        chapters = self.manga.get_chapters()
+        return make_response(jsonify({
+            "message": "Book added succedfully",
+            "data": chapters
+
+        }), 200)
+

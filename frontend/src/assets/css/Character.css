@@ -1,0 +1,34 @@
+h2 {
+  border-bottom: 2px solid #ebebeb;
+  margin-bottom: 35px;
+}
+p {
+  word-break: break-word;
+  word-wrap: break-word;
+  line-height: 30px;
+}
+
+p a {
+  color: #017c37;
+  text-decoration: none;
+}
+
+[data-align='right'] {
+  float: right !important;
+  margin-top: 5px;
+  margin-left: 40px;
+}
+.content-body figure {
+  position: relative;
+}
+.wiki {
+  margin: 3rem 4rem;
+  border: 4px solid #d1d4d6;
+  overflow: hidden;
+}
+
+img {
+  -ms-interpolation-mode: bicubic;
+  vertical-align: middle;
+  max-width: 100%;
+}

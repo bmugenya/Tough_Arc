@@ -1,0 +1,40 @@
+/* Banner Section */
+
+.banner {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), transparent),
+    url(https://res.cloudinary.com/doammcpie/image/upload/v1614528157/1_lbqeku.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  min-height: 43vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.banner h3 {
+  padding: 3rem;
+}
+
+.banner.wrapper {
+  width: 90%;
+  margin: auto;
+}
+
+/* Featured Books and Books Section */
+
+.featured-head {
+  background: #343c44;
+  padding: 2rem;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  border-bottom: none;
+}
