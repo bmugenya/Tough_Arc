@@ -17,7 +17,7 @@ class database_setup(object):
 
     def create_tables(self):
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS Users (
-            student_id VARCHAR(25) NOT NULL PRIMARY KEY,
+            student_id SERIAL NOT NULL PRIMARY KEY,
             firstname VARCHAR(25) NOT NULL,
             lastname  VARCHAR(25) NOT NULL,
             email       VARCHAR(25)    NOT NULL,
