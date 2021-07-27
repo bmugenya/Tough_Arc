@@ -1,43 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Grid } from '@material-ui/core'
-import axios from 'axios'
+import axios from '../utils/axios'
 import { parse } from 'fast-xml-parser'
 import ReactHtmlParser from 'react-html-parser'
 import '../assets/css/Character.css'
 
-const Character = () => {
+const Character = ({ fetchUrl }) => {
   const [data, setData] = useState([])
-  const [error, setError] = useState(null)
+
   const document = ReactHtmlParser(data.description)
+  const doc = truncate(document, 150)
+
   useEffect(() => {
-    axios(
-      'https://cors-anywhere.herokuapp.com/https://comicvine.gamespot.com/api/character/4005-1477/?api_key=b802f4442f13cf777d8ade8a079982e3f9e84fbd',
-
-      {
-        'Content-Type': 'application/xml; charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
-      }
-    )
-      .then((response) => {
-        let obj = parse(response.data)
-        let newObj = obj.response.results
-        console.log(newObj)
-        setData(newObj)
-      })
-      .catch((error) => {
-        console.error('Error fetching data: ', error)
-        setError(error)
-      })
-  }, [])
-
-  if (error) return 'Error!'
+    async function fetchData() {
+      const request = await axios.get()
+      console.log(request)
+      let obj = parse(request)
+      // setData(obj.response.results)
+      // return obj.response
+    }
+    fetchData()
+  }, [fetchUrl])
+  function truncate(str, n) {
+    return str?.length > n ? str.substr(0, n - 1) + '...' : str
+  }
 
   return (
     <>
       <Container className={'top_60'}>
         <Grid container spacing={1}>
           <Grid item xs={12} sm={12} md={8}>
-            {document}
+            {doc}
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <article className='wiki'>

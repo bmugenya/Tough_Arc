@@ -1,7 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Banner from '../components/Banner'
+import { useHistory } from 'react-router-dom'
 const Home = () => {
+  const history = useHistory()
   return (
     <>
       <Banner />
@@ -15,13 +17,8 @@ const Home = () => {
                 </Link>
               </li>
               <li>
-                <Link to='/character'>
-                  <h1>Black Panther</h1>
-                </Link>
-              </li>
-              <li>
                 <Link to='/contact'>
-                  <h1>Contact Us</h1>
+                  <h1>Subscribe</h1>
                 </Link>
               </li>
             </ul>

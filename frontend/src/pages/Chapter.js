@@ -3,8 +3,10 @@ import { useParams } from 'react-router-dom'
 import data from '../utils/data'
 import IconButton from '@material-ui/core/IconButton'
 import '../assets/css/Chapter.css'
+import { useHistory } from 'react-router-dom'
 
 const Chapter = () => {
+  const history = useHistory()
   const [chapter, setChapter] = useState(data)
   const [isError, setIsError] = useState(false)
   const { p_id } = useParams()

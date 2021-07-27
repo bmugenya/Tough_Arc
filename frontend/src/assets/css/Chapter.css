@@ -12,7 +12,7 @@
 .img-container {
   margin-bottom: 5px;
   margin-top: 5px;
-  border: 2px solid;
+  /* border: 2px solid; */
 }
 .img-container img {
   height: auto;

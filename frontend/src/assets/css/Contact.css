@@ -1,50 +1,25 @@
-.conatct_info {
-  font-size: 14px;
-  color: #787878;
-  line-height: 34px;
-}
-.contact_info > span {
-  color: black;
-  font-weight: 500;
+.login {
+  display: grid;
+  place-items: center;
+  height: 100vh;
 }
 
-.MuiGrid-container {
-  width: inherit !important;
+.login > button:hover {
+  background-color: white;
+  color: #2e81f4;
 }
-.contact_box {
-  margin-top: 25px;
-}
-
-.contact_social > a > .MuiSvgIcon-root {
-  font-size: 16px;
-  margin-right: 10px;
-  color: black;
+.login > button {
+  width: 300px;
+  background-color: #2e81f4;
+  color: #eff2f5;
+  font-weight: 800;
 }
 
-.section_title {
-  position: relative;
-  display: inline-block;
-  padding: 0 3px;
+.login > div > img {
+  object-fit: contain;
+  height: 150px;
 }
-
-.section_title .section_text {
-  font-size: 10px;
-  font-weight: 600;
-  position: relative;
-  margin: 0;
-}
-
-.section_title_span {
-  position: absolute;
-  height: 7px;
-  width: 100%;
-  bottom: 0;
-  opacity: 0.4;
-  left: 0;
-  background-color: var(--main-color);
-}
-
-.section {
-  padding-left: 30px;
-  padding-right: 30px;
+.login > div {
+  display: flex;
+  flex-direction: column;
 }

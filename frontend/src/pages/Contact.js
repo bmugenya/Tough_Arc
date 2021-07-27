@@ -1,93 +1,64 @@
-import React from 'react'
-import { Grid, Typography, TextField } from '@material-ui/core'
-import data from '../utils/info'
-import '../assets/css/Contact.css'
-import CustomButton from '../components/Button'
+import { React, useState } from 'react'
+import { Form } from '../components'
+import { login } from '../auth'
+import { useHistory } from 'react-router-dom'
+
+
+
 
 const Contact = () => {
+    const history = useHistory()
+  const [emailAddress, setEmailAddress] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const url = 'www'
+
+  const isInvalid = password === '' || emailAddress === ''
+  const handleSignIn = (event) => {
+    event.preventDefault()
+
+    fetch(`${url}/rafiki/auth`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: emailAddress,
+        password: password,
+      }),
+    }).catch((error) => {
+      setError(error.message)
+      setEmailAddress('')
+      setPassword('')
+    })
+  }
   return (
-    <>
-      {/* Contact */}
-      <Grid container spacing={6} className='section pt_45 pb_45'>
-        {/* Contact form */}
-        <Grid item xs={12} lg={7}>
-          <Grid container>
-            <Grid item className='section_title mb_30'>
-              <span> </span>
-              <h6 className='section_title'>Contact Form</h6>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                  <TextField fullWidth name='name' label='Name' />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField fullWidth name='email' label='Email' />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    name='message'
-                    label='Message'
-                    multiline
-                    rows={4}
-                  />
-                </Grid>
+    <Form>
+      <Form.Pane>
+        <Form.Title>Tough Arch</Form.Title>
+        <Form.Text>
+         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+        </Form.Text>
+      </Form.Pane>
+      <Form.Pane>
+        <Form.Block>
+          <Form.Title>Subscribe</Form.Title>
+          {error && <Form.Error>{error}</Form.Error>}
+          <Form.Base onSubmit={handleSignIn} method='POST'>
+            <Form.Input
+              placeholder='Email address'
+              value={emailAddress}
+              onChange={({ target }) => setEmailAddress(target.value)}
+            />
+            <Form.Submit disabled={isInvalid} type='submit'>
+              Submit
+            </Form.Submit>
+          </Form.Base>
+        </Form.Block>
+      </Form.Pane>
 
-                <Grid item xs={12}>
-                  <CustomButton text='Submit' />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* Contact info */}
-        <Grid item xs={12} lg={5}>
-          <Grid container>
-            <Grid item className='section_title mb_30'>
-              <span> </span>
-              <h6 className='section_title'>Contact Information</h6>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography className='contact_info'>
-                    <span>Address:</span>
-                    {data.address}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography className='contact_info'>
-                    <span>Phone:</span>
-                    {data.phone}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography className='contact_info'>
-                    <span>Email:</span>
-                    {data.email}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Grid container className='contact_box'>
-                {Object.keys(data.socials).map((key) => (
-                  <Grid container className='contact_social'>
-                    <a href={data.socials[key].link}>
-                      {data.socials[key].icon}
-                    </a>
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </>
+    </Form>
   )
 }
-
 export default Contact

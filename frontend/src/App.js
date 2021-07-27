@@ -9,6 +9,7 @@ import Chapter from './pages/Chapter'
 import Footer from './components/Footer'
 import Character from './pages/Character'
 import Contact from './pages/Contact'
+import requests from './utils/requests'
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
           <Cover />
         </Route>
         <Route exact path='/character'>
-          <Character />
+          <Character fetchUrl={requests.fetchPanther} />
         </Route>
         <Route exact path='/contact'>
           <Contact />
